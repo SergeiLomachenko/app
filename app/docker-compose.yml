@@ -1,0 +1,55 @@
+version: '3'
+services:
+  mariadb:
+    image: mariadb:10.5
+    environment:
+      MYSQL_ROOT_PASSWORD: 1111
+      MYSQL_DATABASE: weather_sergey
+      MYSQL_USER: sergey
+      MYSQL_PASSWORD: 1111
+      MYSQL_MAX_CONNECTIONS: 500
+    volumes:
+      - ./my.cnf:/etc/mysql/my.cnf
+    ports:
+      - "3306:3306"
+    networks:
+      - app-network
+      - bd-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  python-app:
+    build:
+      context: .
+      dockerfile: Dockerfile  
+    ports:
+      - "5000:5000"      
+    depends_on:
+      - mariadb  
+    restart: always 
+    networks:
+      - app-network
+      - bd-network
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile_php
+    ports:
+      - "80:80"
+    volumes:
+      - ./index.php:/var/www/html/index.php
+    depends_on:
+      - mariadb
+    restart: always
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+  bd-network:
+    driver: bridge
