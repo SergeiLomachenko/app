@@ -12,7 +12,6 @@ services:
       - ./my.cnf:/etc/mysql/my.cnf
     ports:
       - "3306:3306"
-    restart: always 
     networks:
       - app-network
       - bd-network

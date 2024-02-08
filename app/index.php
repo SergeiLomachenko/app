@@ -51,7 +51,7 @@ echo "Ниже представлена погода из базы данных"
 
 <?php
 // SQL-запрос
-$sql = "SELECT * FROM weather_data ORDER BY timestamp DESC LIMIT 1";
+"SELECT * FROM weather_data ORDER BY timestamp DESC LIMIT 1";
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
